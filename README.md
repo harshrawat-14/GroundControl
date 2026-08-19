@@ -96,6 +96,13 @@ Baseline running cost is effectively **$0**; the cloud adapter runs on trial cre
 - `POST /eval/run {dataset_id, config}` → `{eval_run_id}` · `GET /eval/run/{id}` → aggregate metrics.
 - `GET /healthz`, `GET /readyz`, `GET /metrics` (Prometheus exposition).
 
+## Observability
+
+- **Structured logs** (`structlog`, JSON-rendered): every HTTP request logs method/path/status/duration; `trace_id` ties a served query to its `requests` row.
+- **Prometheus** at `GET /metrics`: `groundcontrol_query_latency_seconds`, `groundcontrol_query_iterations`, `groundcontrol_query_cost_usd_total`, `groundcontrol_query_cache_hits_total`, `groundcontrol_query_low_confidence_total`, `groundcontrol_gateway_provider_calls_total{provider,task,outcome}`, `groundcontrol_eval_score{metric}`.
+- **Langfuse** tracing is opt-in: set `LANGFUSE_PUBLIC_KEY`/`LANGFUSE_SECRET_KEY` and the agent loop emits a span per run; unset, it's a zero-cost no-op — the service behaves identically either way.
+- **CI** builds the Docker image and smoke-tests `GET /healthz` against a running container on every push, in addition to lint + unit tests.
+
 ## Data model
 
 | Table | Purpose |
@@ -162,7 +169,7 @@ Built as six milestones, each ending in a conventional commit; milestones M1–M
 | M2 — Agentic self-correction loop | LangGraph state machine, online judge, bounded re-retrieval/escalation | ✅ |
 | M3 — Evaluation framework | Ragas-style metrics, golden dataset, `/eval/run`, same metric reused as the runtime gate | ✅ |
 | M4 — AI gateway | Routing policy, fallback chain, semantic cache, token accounting, one cloud adapter | ✅ |
-| M5 — Observability + deploy hardening | End-to-end tracing, Prometheus dashboards, hardened Docker/CI deploy | ⏳ |
+| M5 — Observability + deploy hardening | Structured logs, Prometheus metrics, optional Langfuse tracing, CI Docker build+smoke-test | ✅ |
 
 See [`docs/GroundControl_Design.md`](docs/GroundControl_Design.md) for the full design document (HLD, LLD, and the detailed per-milestone acceptance criteria and risk register this build follows).
 

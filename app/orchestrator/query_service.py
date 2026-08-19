@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.interfaces import Embedder
+from app.core.observability import record_eval_scores, record_query_metrics, trace_span
 from app.core.schemas import Filter, LLMRequest, QueryResponse, ScoredChunk
 from app.db.models import RequestRow
 from app.evaluation.online_judge import OnlineJudge
@@ -74,9 +75,10 @@ class AgenticQueryService:
         self._last_cache_hit = False
 
         graph = AgentGraph(retrieve=self._retrieve, draft=self._draft, judge=self._judge.judge)
-        state = await graph.run(
-            question, filters=filters, max_iterations=max_iterations or settings.max_iterations
-        )
+        with trace_span("agent.run", trace_id=trace_id, question=question):
+            state = await graph.run(
+                question, filters=filters, max_iterations=max_iterations or settings.max_iterations
+            )
         if not state.get("draft_answer"):
             state["draft_answer"] = (
                 "I don't have enough information in the indexed corpus to answer this question."
@@ -90,6 +92,15 @@ class AgenticQueryService:
             latency_ms=latency_ms,
             cache_hit=self._last_cache_hit,
         )
+
+        record_query_metrics(
+            latency_ms=response.latency_ms,
+            iterations=response.iterations,
+            cost_usd=response.cost_usd,
+            cache_hit=response.cache_hit,
+            low_confidence=response.low_confidence,
+        )
+        record_eval_scores(faithfulness=response.faithfulness, groundedness=response.groundedness)
 
         self._session.add(
             RequestRow(
