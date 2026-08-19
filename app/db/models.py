@@ -32,7 +32,7 @@ class Document(Base):
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
 
-    chunks: Mapped[list["ChunkRow"]] = relationship(
+    chunks: Mapped[list[ChunkRow]] = relationship(
         back_populates="document", cascade="all, delete-orphan"
     )
 
@@ -84,7 +84,7 @@ class EvalRun(Base):
     aggregate: Mapped[dict] = mapped_column(JSONB, default=dict)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
-    results: Mapped[list["EvalResultRow"]] = relationship(
+    results: Mapped[list[EvalResultRow]] = relationship(
         back_populates="eval_run", cascade="all, delete-orphan"
     )
 

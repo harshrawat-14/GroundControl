@@ -63,7 +63,7 @@ class EvalRunDetailResponse(BaseModel):
 @router.post("/run", response_model=EvalRunCreatedResponse)
 async def start_eval_run(
     req: EvalRunRequest,
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession = Depends(get_session),  # noqa: B008
 ) -> EvalRunCreatedResponse:
     settings = get_settings()
     try:
@@ -107,7 +107,7 @@ async def start_eval_run(
 @router.get("/run/{eval_run_id}", response_model=EvalRunDetailResponse)
 async def get_eval_run(
     eval_run_id: str,
-    session: AsyncSession = Depends(get_session),
+    session: AsyncSession = Depends(get_session),  # noqa: B008
 ) -> EvalRunDetailResponse:
     try:
         run_uuid = uuid.UUID(eval_run_id)

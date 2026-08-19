@@ -5,7 +5,9 @@ from fastapi import FastAPI
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from starlette.responses import Response
 
-from app.api.routes import ingest, query as query_routes, eval as eval_routes, health
+from app.api.routes import eval as eval_routes
+from app.api.routes import health, ingest
+from app.api.routes import query as query_routes
 from app.core.config import get_settings
 
 logger = structlog.get_logger()

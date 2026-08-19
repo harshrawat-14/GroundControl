@@ -15,6 +15,6 @@ async def healthz() -> dict[str, str]:
 
 
 @router.get("/readyz")
-async def readyz(session: AsyncSession = Depends(get_session)) -> dict[str, str]:
+async def readyz(session: AsyncSession = Depends(get_session)) -> dict[str, str]:  # noqa: B008
     await session.execute(text("SELECT 1"))
     return {"status": "ready"}
