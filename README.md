@@ -158,10 +158,10 @@ Built as six milestones, each ending in a conventional commit; milestones M1–M
 | Milestone | Delivers | Status |
 |---|---|---|
 | M0 — Scaffold and infra | Repo, Docker Compose stack, FastAPI skeleton, health checks, CI | ✅ |
-| M1 — Ingestion + retrieval + `/query` | PDF/Web connectors, metadata-aware chunker, hybrid retrieval, grounded cited answers | ⏳ |
-| M2 — Agentic self-correction loop | LangGraph state machine, online judge, bounded re-retrieval/escalation | ⏳ |
-| M3 — Evaluation framework | Ragas + custom metrics, golden dataset, `/eval/run`, same metric reused as the runtime gate | ⏳ |
-| M4 — AI gateway | Routing policy, fallback chain, semantic cache, token accounting, one cloud adapter | ⏳ |
+| M1 — Ingestion + retrieval + `/query` | PDF/Web connectors, metadata-aware chunker, hybrid retrieval, grounded cited answers | ✅ |
+| M2 — Agentic self-correction loop | LangGraph state machine, online judge, bounded re-retrieval/escalation | ✅ |
+| M3 — Evaluation framework | Ragas-style metrics, golden dataset, `/eval/run`, same metric reused as the runtime gate | ✅ |
+| M4 — AI gateway | Routing policy, fallback chain, semantic cache, token accounting, one cloud adapter | ✅ |
 | M5 — Observability + deploy hardening | End-to-end tracing, Prometheus dashboards, hardened Docker/CI deploy | ⏳ |
 
 See [`docs/GroundControl_Design.md`](docs/GroundControl_Design.md) for the full design document (HLD, LLD, and the detailed per-milestone acceptance criteria and risk register this build follows).
